@@ -20,6 +20,8 @@ import net.openid.appauth.AuthorizationRequest;
 import net.openid.appauth.AuthorizationResponse;
 import net.openid.appauth.AuthorizationService;
 import net.openid.appauth.AuthorizationServiceConfiguration;
+import net.openid.appauth.ClientAuthentication;
+import net.openid.appauth.ClientSecretPost;
 import net.openid.appauth.ResponseTypeValues;
 import net.openid.appauth.TokenResponse;
 import net.openid.appauth.TokenRequest;
@@ -31,6 +33,8 @@ public class RNAppAuthModule extends ReactContextBaseJavaModule implements Activ
 
     private final ReactApplicationContext reactContext;
     private Promise promise;
+
+    private String clientSecret;
 
     public RNAppAuthModule(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -64,11 +68,13 @@ public class RNAppAuthModule extends ReactContextBaseJavaModule implements Activ
     }
 
     @ReactMethod
-    public void authorize(String issuer, final String redirectUrl, final String clientId, final ReadableArray scopes, final Promise promise) {
+    public void authorize(String issuer, final String redirectUrl, final String clientId, final String clientSecret, final ReadableArray scopes, final Promise promise) {
 
         final Context context = this.reactContext;
         this.promise = promise;
         final Activity currentActivity = getCurrentActivity();
+
+        this.clientSecret = clientSecret;
 
         final String scopesString = this.arrayToString(scopes);
 
@@ -103,7 +109,7 @@ public class RNAppAuthModule extends ReactContextBaseJavaModule implements Activ
     }
 
     @ReactMethod
-    public void refresh(String issuer, final String redirectUrl, final String clientId, final String refreshToken, final ReadableArray scopes, final Promise promise) {
+    public void refresh(String issuer, final String redirectUrl, final String clientId, final String clientSecret, final String refreshToken, final ReadableArray scopes, final Promise promise) {
         final Context context = this.reactContext;
 
         final String scopesString = this.arrayToString(scopes);
@@ -133,7 +139,9 @@ public class RNAppAuthModule extends ReactContextBaseJavaModule implements Activ
 
                         AuthorizationService authService = new AuthorizationService(context);
 
-                        authService.performTokenRequest(tokenRequest, new AuthorizationService.TokenResponseCallback() {
+                        ClientAuthentication auth = new ClientSecretPost(clientSecret);
+
+                        authService.performTokenRequest(tokenRequest, auth, new AuthorizationService.TokenResponseCallback() {
                             @Override
                             public void onTokenRequestCompleted(@Nullable TokenResponse response, @Nullable AuthorizationException ex) {
                                 if (response != null) {
@@ -163,8 +171,10 @@ public class RNAppAuthModule extends ReactContextBaseJavaModule implements Activ
 
             AuthorizationService authService = new AuthorizationService(this.reactContext);
 
+            ClientAuthentication auth = new ClientSecretPost(this.clientSecret);
+
             authService.performTokenRequest(
-                    response.createTokenExchangeRequest(),
+                    response.createTokenExchangeRequest(), auth,
                     new AuthorizationService.TokenResponseCallback() {
 
                         @Override
