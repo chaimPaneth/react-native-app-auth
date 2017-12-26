@@ -7,6 +7,7 @@ export default class AppAuth {
   constructor(config) {
     invariant(typeof config.issuer === 'string', 'Config error: issuer must be a string');
     invariant(typeof config.clientId === 'string', 'Config error: clientId must be a string');
+    invariant(typeof config.clientSecret === 'string', 'Config error: clientSecret must be a string');
     invariant(typeof config.redirectUrl === 'string', 'Config error: redirectUrl must be a string');
 
     this.config = { ...config };
@@ -23,6 +24,7 @@ export default class AppAuth {
       this.config.issuer,
       this.config.redirectUrl,
       this.config.clientId,
+      this.config.clientSecret,
       scopes
     );
   }
@@ -35,6 +37,7 @@ export default class AppAuth {
       this.config.issuer,
       this.config.redirectUrl,
       this.config.clientId,
+      this.config.clientSecret,
       refreshToken,
       scopes
     );
