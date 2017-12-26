@@ -17,6 +17,7 @@ RCT_REMAP_METHOD(authorize,
                  issuer: (NSString *) issuer
                  redirectUrl: (NSString *) redirectUrl
                  clientId: (NSString *) clientId
+                 clientSecret: (NSString *) clientSecret
                  scopes: (NSArray *) scopes
                  resolve:(RCTPromiseResolveBlock) resolve
                  reject: (RCTPromiseRejectBlock)  reject)
@@ -31,7 +32,8 @@ RCT_REMAP_METHOD(authorize,
                                                         // builds authentication request
                                                         OIDAuthorizationRequest *request =
                                                         [[OIDAuthorizationRequest alloc] initWithConfiguration:configuration
-                                                                                                      clientId:clientId
+                                                                                                      clientID:clientId
+                                                                                                    clientSecret:clientSecret
                                                                                                         scopes:scopes
                                                                                                    redirectURL:[NSURL URLWithString:redirectUrl]
                                                                                                   responseType:OIDResponseTypeCode
@@ -77,6 +79,7 @@ RCT_REMAP_METHOD(refresh,
                  issuer: (NSString *) issuer
                  redirectUrl: (NSString *) redirectUrl
                  clientId: (NSString *) clientId
+                 clientSecret: (NSString *) clientSecret
                  refreshToken: (NSString *) refreshToken
                  scopes: (NSArray *) scopes
                  resolve:(RCTPromiseResolveBlock) resolve
@@ -95,7 +98,7 @@ RCT_REMAP_METHOD(refresh,
                                                                                      authorizationCode:nil
                                                                                            redirectURL:[NSURL URLWithString:redirectUrl]
                                                                                               clientID:clientId
-                                                                                          clientSecret:nil
+                                                                                          clientSecret:clientSecret
                                                                                                 scopes:scopes
                                                                                           refreshToken:refreshToken
                                                                                           codeVerifier:nil
