@@ -31,13 +31,10 @@ RCT_REMAP_METHOD(authorize,
 
                                                         // builds authentication request
                                                         OIDAuthorizationRequest *request =
-                                                        [[OIDAuthorizationRequest alloc] initWithConfiguration:configuration
-                                                                                                      clientID:clientId
+                                                          [[OIDAuthorizationRequest alloc] initWithConfiguration:configuration
+                                                                                                        clientId:clientId
                                                                                                     clientSecret:clientSecret
-                                                                                                        scopes:scopes
-                                                                                                   redirectURL:[NSURL URLWithString:redirectUrl]
-                                                                                                  responseType:OIDResponseTypeCode
-                                                                                          additionalParameters:nil];
+                                                                                                          scopes:scopes redirectURL:[NSURL URLWithString:redirectUrl] responseType:OIDResponseTypeCode additionalParameters:nil];
 
 
                                                         // performs authentication request
